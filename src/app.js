@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json());
 
 mongoose
-  .connect("mongodb://localhost:27017/coderhouse")
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("Mongo conectado"))
   .catch((err) => console.log(err));
 
