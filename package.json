@@ -6,11 +6,11 @@
   "scripts": {
     "dev": "nodemon src/app.js",
     "start": "node src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test"
   },
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "API para adopciones de mascotas y gestion de usuarios",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^17.3.1",
