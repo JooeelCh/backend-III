@@ -14,6 +14,15 @@ const petSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    adopted: {
+      type: Boolean,
+      default: false,
+    },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
   },
   {
     timestamps: true,

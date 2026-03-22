@@ -24,10 +24,12 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
-    pets: {
-      type: Array,
-      default: [],
-    },
+    pets: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Pet",
+      },
+    ],
   },
   {
     timestamps: true,
