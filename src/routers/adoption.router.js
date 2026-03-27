@@ -1,8 +1,8 @@
 import { Router } from "express";
-import mongoose, { Promise } from "mongoose";
+import mongoose from "mongoose";
 import Adoption from "../models/Adoption.js";
-import User from "../models/User";
-import Pet from "../models/Pet";
+import User from "../models/User.js";
+import Pet from "../models/Pet.js";
 
 const router = Router();
 
@@ -46,12 +46,10 @@ router.post("/:uid/:pid", async (req, res) => {
     !mongoose.Types.ObjectId.isValid(uid) ||
     !mongoose.Types.ObjectId.isValid(pid)
   ) {
-    return res
-      .status(400)
-      .json({
-        status: "error",
-        message: "El ID del usuario y la mascota deben ser validos",
-      });
+    return res.status(400).json({
+      status: "error",
+      message: "El ID del usuario y la mascota deben ser validos",
+    });
   }
 
   try {
@@ -73,12 +71,10 @@ router.post("/:uid/:pid", async (req, res) => {
     }
 
     if (pet.adopted) {
-      return res
-        .status(409)
-        .json({
-          status: "error",
-          message: "La mascota ya se encuenta adoptada",
-        });
+      return res.status(409).json({
+        status: "error",
+        message: "La mascota ya se encuenta adoptada",
+      });
     }
 
     pet.adopted = true;
@@ -89,14 +85,14 @@ router.post("/:uid/:pid", async (req, res) => {
 
     await Promise.all([pet.save(), user.save()]);
 
-    return res
-      .status(201)
-      .json({
-        status: "success",
-        message: "Adopcion exitosa",
-        payload: adoption,
-      });
+    return res.status(201).json({
+      status: "success",
+      message: "Adopcion exitosa",
+      payload: adoption,
+    });
   } catch (error) {
     return res.status(500).json({ status: "error", message: error.message });
   }
 });
+
+export default router;
