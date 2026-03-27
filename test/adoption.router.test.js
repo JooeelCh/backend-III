@@ -74,7 +74,7 @@ test("GET /api/adoptions/:aid devuelve 400 si el id es inválido", async () => {
     const body = await response.json();
 
     assert.equal(response.status, 400);
-    assert.equal(body.message, "El id de la adopción no es válido");
+    assert.equal(body.message, "El ID de la adopcion no es valido");
   } finally {
     await closeServer(server);
   }
@@ -93,7 +93,7 @@ test("GET /api/adoptions/:aid devuelve 404 si la adopción no existe", async () 
     const body = await response.json();
 
     assert.equal(response.status, 404);
-    assert.equal(body.message, "Adopción no encontrada");
+    assert.equal(body.message, "Adopcion no encontrada");
   } finally {
     await closeServer(server);
   }
@@ -169,7 +169,7 @@ test("POST /api/adoptions/:uid/:pid crea una adopción", async () => {
 
     assert.equal(response.status, 201);
     assert.equal(body.status, "success");
-    assert.equal(body.message, "Adopción registrada correctamente");
+    assert.equal(body.message, "Adopcion registrada correctamente");
     assert.equal(body.payload._id, adoptionId);
     assert.equal(String(pet.owner), userId.toString());
     assert.equal(pet.adopted, true);
@@ -278,7 +278,7 @@ test("POST /api/adoptions/:uid/:pid devuelve 400 si algún id es inválido", asy
     assert.equal(response.status, 400);
     assert.equal(
       body.message,
-      "Los ids del usuario y la mascota deben ser válidos",
+      "El ID del usuario y la mascota deben ser validos",
     );
   } finally {
     await closeServer(server);

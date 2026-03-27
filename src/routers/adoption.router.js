@@ -73,7 +73,7 @@ router.post("/:uid/:pid", async (req, res) => {
     if (pet.adopted) {
       return res.status(409).json({
         status: "error",
-        message: "La mascota ya se encuenta adoptada",
+        message: "La mascota ya se encuentra adoptada",
       });
     }
 
@@ -87,7 +87,7 @@ router.post("/:uid/:pid", async (req, res) => {
 
     return res.status(201).json({
       status: "success",
-      message: "Adopcion exitosa",
+      message: "Adopcion registrada correctamente",
       payload: adoption,
     });
   } catch (error) {
