@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     const adoptions = await Adoption.find().populate("owner pet");
     return res.json({ status: "success", payload: adoptions });
   } catch (error) {
-    return res.status(500).json({ status: "error", message: error.messag });
+    return res.status(500).json({ status: "error", message: error.message });
   }
 });
 
