@@ -1,9 +1,9 @@
 FROM node:22-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /src/app
 
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install
 
 COPY . .
 
