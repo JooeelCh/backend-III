@@ -7,7 +7,7 @@ export const petsService = {
     const { name, species, age } = payload;
 
     if (!name || !species || age === undefined) {
-      return { error: "name, species y age son obligatorios", code: 400 };
+      return { error: "Nombre, Especie y Edad son obligatorios", code: 400 };
     }
 
     const pet = await petsRepository.create(payload);

@@ -12,7 +12,7 @@ export const sessionsService = {
   register: async ({ first_name, last_name, email, password, role }) => {
     if (!first_name || !last_name || !email || !password) {
       return {
-        error: "first_name, last_name, email y password son obligatorios",
+        error: "Nombre, Apellido, email y contraseña son obligatorios",
         code: 400,
       };
     }
@@ -38,7 +38,7 @@ export const sessionsService = {
 
   login: async ({ email, password }) => {
     if (!email || !password) {
-      return { error: "email y password son obligatorios", code: 400 };
+      return { error: "Email y contraseña son obligatorios", code: 400 };
     }
 
     const user = await usersRepository.findByEmail(email);

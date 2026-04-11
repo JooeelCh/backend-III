@@ -21,7 +21,7 @@ export const usersService = {
 
     if (!first_name || !last_name || !email || !password) {
       return {
-        error: "first_name, last_name, email y password son obligatorios",
+        error: "Nombre, Apellido, email y contraseña son obligatorios",
         code: 400,
       };
     }
