@@ -3,6 +3,21 @@ import { petsRepository } from "../repository/pets.repository.js";
 
 export const petsService = {
   getAll: () => petsRepository.findAll(),
+
+  getById: async (pid) => {
+    if (!mongoose.Types.ObjectId.isValid(pid)) {
+      return { error: "El id de la mascota no es válido", code: 400 };
+    }
+
+    const pet = await petsRepository.findById(pid);
+
+    if (!pet) {
+      return { error: "Mascota no encontrado", code: 404 };
+    }
+
+    return { data: pet };
+  },
+
   create: async (payload) => {
     const { name, species, age } = payload;
 
