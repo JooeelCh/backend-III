@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 import {
   currentSession,
   loginSession,
@@ -10,7 +11,7 @@ const router = Router();
 
 router.post("/register", registerSession);
 router.post("/login", loginSession);
-router.get("/current", currentSession);
-router.post("/logout", logoutSession);
+router.get("/current", authMiddleware, currentSession);
+router.post("/logout", authMiddleware, logoutSession);
 
 export default router;

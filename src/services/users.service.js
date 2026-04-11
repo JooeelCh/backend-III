@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 import { usersRepository } from "../repository/users.repository.js";
+import { hashPassword, sanitizeUser } from "../utils/auth.utils.js";
 
 export const usersService = {
-  getAll: () => usersRepository.findAll(),
+  getAll: async () => {
+    const users = await usersRepository.findAll();
+    return { data: users.map(sanitizeUser) };
+  },
+
   getById: async (uid) => {
     if (!mongoose.Types.ObjectId.isValid(uid)) {
       return { error: "El id del usuario no es válido", code: 400 };
@@ -14,10 +19,11 @@ export const usersService = {
       return { error: "Usuario no encontrado", code: 404 };
     }
 
-    return { data: user };
+    return { data: sanitizeUser(user) };
   },
+
   create: async (payload) => {
-    const { first_name, last_name, email, password } = payload;
+    const { first_name, last_name, email, password, role } = payload;
 
     if (!first_name || !last_name || !email || !password) {
       return {
@@ -26,12 +32,31 @@ export const usersService = {
       };
     }
 
-    const user = await usersRepository.create(payload);
-    return { data: user, code: 201 };
+    const existingUser = await usersRepository.findByEmail(email);
+    if (existingUser) {
+      return { error: "El email ya está registrado", code: 409 };
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    const user = await usersRepository.create({
+      first_name,
+      last_name,
+      email,
+      password: hashedPassword,
+      role,
+    });
+
+    return { data: sanitizeUser(user), code: 201 };
   },
+
   update: async (uid, payload) => {
     if (!mongoose.Types.ObjectId.isValid(uid)) {
       return { error: "El id del usuario no es válido", code: 400 };
+    }
+
+    if (payload.password) {
+      payload.password = await hashPassword(payload.password);
     }
 
     const user = await usersRepository.updateById(uid, payload);
@@ -40,8 +65,9 @@ export const usersService = {
       return { error: "Usuario no encontrado", code: 404 };
     }
 
-    return { data: user };
+    return { data: sanitizeUser(user) };
   },
+
   delete: async (uid) => {
     if (!mongoose.Types.ObjectId.isValid(uid)) {
       return { error: "El id del usuario no es válido", code: 400 };

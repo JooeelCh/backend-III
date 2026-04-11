@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 import { usersRepository } from "../repository/users.repository.js";
-import { sessionsRepository } from "../repository/sessions.repository.js";
 import {
-  generateSessionToken,
+  generateJWT,
   hashPassword,
   sanitizeUser,
   verifyPassword,
+  verifyJWT,
 } from "../utils/auth.utils.js";
 
 export const sessionsService = {
@@ -53,8 +53,7 @@ export const sessionsService = {
       return { error: "Credenciales inválidas", code: 401 };
     }
 
-    const token = generateSessionToken();
-    sessionsRepository.createSession(token, user._id);
+    const token = generateJWT(user);
 
     return {
       data: {
@@ -64,39 +63,25 @@ export const sessionsService = {
     };
   },
 
-  current: async (authorizationHeader) => {
-    if (!authorizationHeader?.startsWith("Bearer ")) {
-      return { error: "Token no provisto", code: 401 };
+  current: async (userData) => {
+    if (!userData?.id) {
+      return { error: "Token inválido", code: 401 };
     }
 
-    const token = authorizationHeader.replace("Bearer ", "").trim();
-    const userId = sessionsRepository.getUserIdByToken(token);
-
-    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-      return { error: "Sesión inválida", code: 401 };
+    if (!mongoose.Types.ObjectId.isValid(userData.id)) {
+      return { error: "Token inválido", code: 401 };
     }
 
-    const user = await usersRepository.findById(userId);
+    const user = await usersRepository.findById(userData.id);
 
     if (!user) {
-      return { error: "Sesión inválida", code: 401 };
+      return { error: "Usuario no encontrado", code: 404 };
     }
 
     return { data: sanitizeUser(user) };
   },
 
-  logout: (authorizationHeader) => {
-    if (!authorizationHeader?.startsWith("Bearer ")) {
-      return { error: "Token no provisto", code: 401 };
-    }
-
-    const token = authorizationHeader.replace("Bearer ", "").trim();
-    const deleted = sessionsRepository.deleteSession(token);
-
-    if (!deleted) {
-      return { error: "Sesión inválida", code: 401 };
-    }
-
-    return { data: { message: "Sesión cerrada correctamente" } };
+  logout: () => {
+    return { data: { message: "Logout correcto" } };
   },
 };

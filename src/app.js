@@ -5,10 +5,12 @@ import usersRouter from "./routes/users.router.js";
 import petsRouter from "./routes/pets.router.js";
 import adoptionRouter from "./routes/adoption.router.js";
 import { swaggerSpec } from "./utils/swagger.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/sessions", sessionsRouter);

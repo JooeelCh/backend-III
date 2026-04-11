@@ -26,4 +26,17 @@ export const petsService = {
 
     return { data: pet };
   },
+  delete: async (pid) => {
+    if (!mongoose.Types.ObjectId.isValid(pid)) {
+      return { error: "El id de la mascota no es válido", code: 400 };
+    }
+
+    const pet = await petsRepository.deleteById(pid);
+
+    if (!pet) {
+      return { error: "Mascota no encontrada", code: 404 };
+    }
+
+    return { data: pet };
+  },
 };

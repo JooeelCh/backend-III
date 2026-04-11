@@ -23,7 +23,16 @@ export const loginSession = async (req, res) => {
       return res.status(result.code).json(errorResponse(result.error));
     }
 
-    return res.json({ status: "success", token: result.data.token });
+    res.cookie("token", result.data.token, {
+      httpOnly: true,
+      secure: false,
+      maxAge: 60 * 60 * 1000,
+    });
+
+    return res.json({
+      status: "success",
+      token: result.data.token,
+    });
   } catch (error) {
     return res.status(500).json(errorResponse(error.message));
   }
@@ -31,7 +40,7 @@ export const loginSession = async (req, res) => {
 
 export const currentSession = async (req, res) => {
   try {
-    const result = await sessionsService.current(req.headers.authorization);
+    const result = await sessionsService.current(req.user);
 
     if (result.error) {
       return res.status(result.code).json(errorResponse(result.error));
@@ -45,11 +54,9 @@ export const currentSession = async (req, res) => {
 
 export const logoutSession = async (req, res) => {
   try {
-    const result = sessionsService.logout(req.headers.authorization);
+    res.clearCookie("token");
 
-    if (result.error) {
-      return res.status(result.code).json(errorResponse(result.error));
-    }
+    const result = sessionsService.logout();
 
     return res.json({ status: "success", ...result.data });
   } catch (error) {

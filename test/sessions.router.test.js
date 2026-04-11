@@ -96,15 +96,21 @@ test("POST /api/sessions/login + GET /api/sessions/current + POST /api/sessions/
     });
 
     const loginBody = await loginResponse.json();
-    const token = loginBody.payload.token;
+
+    const token = loginBody.token;
+
+    const cookie = loginResponse.headers.get("set-cookie");
 
     assert.equal(loginResponse.status, 200);
     assert.equal(loginBody.status, "success");
     assert.equal(typeof token, "string");
 
     const currentResponse = await fetch(`${baseUrl}/api/sessions/current`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Cookie: cookie,
+      },
     });
+
     const currentBody = await currentResponse.json();
 
     assert.equal(currentResponse.status, 200);
@@ -113,18 +119,22 @@ test("POST /api/sessions/login + GET /api/sessions/current + POST /api/sessions/
 
     const logoutResponse = await fetch(`${baseUrl}/api/sessions/logout`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Cookie: cookie,
+      },
     });
 
     const logoutBody = await logoutResponse.json();
 
     assert.equal(logoutResponse.status, 200);
-    assert.equal(logoutBody.message, "Sesión cerrada correctamente");
+    assert.equal(logoutBody.message, "Logout correcto");
 
     const currentAfterLogoutResponse = await fetch(
       `${baseUrl}/api/sessions/current`,
       {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Cookie: cookie,
+        },
       },
     );
 

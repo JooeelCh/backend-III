@@ -7,4 +7,5 @@ export const petsRepository = {
   updateById: (id, payload) =>
     Pet.findByIdAndUpdate(id, payload, { new: true, runValidators: true }),
   insertMany: (payload) => Pet.insertMany(payload),
+  deleteById: (id) => Pet.findByIdAndDelete(id),
 };

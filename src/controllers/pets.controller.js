@@ -37,3 +37,17 @@ export const updatePet = async (req, res) => {
     return res.status(500).json(errorResponse(error.message));
   }
 };
+
+export const deletePet = async (req, res) => {
+  try {
+    const result = await petsService.delete(req.params.pid);
+
+    if (result.error) {
+      return res.status(result.code).json(errorResponse(result.error));
+    }
+
+    return res.json(successResponse(result.data));
+  } catch (error) {
+    return res.status(500).json(errorResponse(error.message));
+  }
+};
